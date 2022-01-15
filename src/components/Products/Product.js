@@ -1,19 +1,14 @@
 
 
 import React from 'react';
-import { Col, Row, Button, Badge } from 'react-bootstrap';
+import { Col, Row, Button, Badge, Card } from 'react-bootstrap';
 import "../../assets/css/styles.css";
 import {saveLastInterestProduct} from "../../app/service/storageServices";
 import db from "../../app/db/db";
 
-const styles = {
-  fontSize: "15px",
-  color: "black",
-};
-
 
 export const Product = ({ item }) => {
-  const { title, image, price } = item;
+  const { title, image, price, description, category } = item;
 
   const addProductToCart = ({title, price, category}) => {
     db.cart.add({
@@ -23,28 +18,38 @@ export const Product = ({ item }) => {
     })
   }
   return (
-    <Col xs={4}>
-      <Row>
+    <div className="col-lg-4 d-flex align-items-stretch">
+    <Card  style={{ marginBottom: "15px", padding: 10 }}>
+      <Row >
         <Col xs={8}>
-          <div style={styles}>{title}</div>
+          <Card.Img
+            className="mx-auto"
+            variant="top"
+            src={image}
+            style={{ height: 120, width: 120 }}
+          />
         </Col>
         <Col xs={4}>
-          <Button onClick= {() => saveLastInterestProduct(title)} variant="primary"> 
-            Precio <Badge bg="secondary">{price}</Badge>
-            <span className="visually-hidden">$</span>
+          <Badge pill bg="info">
+            {category}
+          </Badge>{" "}
+        </Col>
+      </Row>
+      <Card.Body>
+        <Card.Title>{title}</Card.Title>
+        <Card.Text>{description}</Card.Text>
+      </Card.Body>
+      <Row>
+        <Col>
+          <Button onClick={() => addProductToCart(item) } variant="warning">Agregar al carrito</Button>
+        </Col>
+        <Col>
+          <Button onClick={() => saveLastInterestProduct(title)} variant="light" >
+            Precio <Badge bg="secondary">${price}</Badge>
           </Button>
         </Col>
       </Row>
-      <Row>
-        <Col xs={12}>
-          <img className="img-product" alt="" src={image}></img>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Button onClick={() => addProductToCart(item)} variant="warning">Agregar al carrito</Button>
-        </Col>
-      </Row>
-    </Col>
+    </Card>
+  </div>
   );
 };
